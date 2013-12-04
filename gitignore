@@ -1,0 +1,9 @@
+*.ncb
+*.opensdf
+*.sdf
+*.sln
+*.suo
+*.vcproj
+*.user
+*.vcxproj
+*.filters
