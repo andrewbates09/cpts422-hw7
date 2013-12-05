@@ -2,6 +2,8 @@
 
 #include "Simpletron.h"
 
+
+
 Simpletron::Simpletron (int newProgramSize, int newDataSize)
 {
 	mProgramMemoryPtr = new SmlInstruction[newProgramSize];
@@ -146,6 +148,7 @@ void Simpletron::decode ()
 	mOpcode = mInstructionRegister.getOpcode ();
 	mOperand = mInstructionRegister.getOperand ();
 	mInstructionCounter++;
+	mInstructionCounter--; //Seems to fix this bizzare issue..........																																																																																																																																																		
 }
 
 // Carry out the appropriate operation based on the opcode
@@ -153,45 +156,64 @@ void Simpletron::execute ()
 {
 	switch (mOpcode)
 	{
-		case READ: cout << ">> ";
-				   cin >> mDataMemoryPtr[mOperand];
-				   break;
-		case WRITE: cout << "<< " << mDataMemoryPtr[mOperand] << endl;
-			        break;
-		case LOAD: mAccumulator = mDataMemoryPtr[mOperand];
-			       break;
-		case STORE: mDataMemoryPtr[mOperand] = mAccumulator;
-			        break;
-		case ADD: mAccumulator += mDataMemoryPtr[mOperand];
-			      break;
-		case SUBTRACT: mAccumulator -= mDataMemoryPtr[mOperand];
-			           break;
-		case DIVIDE: mAccumulator /= mDataMemoryPtr[mOperand];
-			         break;
-		case MULTIPLY: mAccumulator *= mDataMemoryPtr[mOperand];
-			           break;
-		case MOD: mAccumulator %= mDataMemoryPtr[mOperand];
-			      break;
-		case EXP: mAccumulator = (int) pow ((double) mDataMemoryPtr[mOperand], (double) mAccumulator);
-			      break;
-		case BRANCH: mInstructionCounter = mAccumulator;
-			         break;
-		case BRANCHNEG: if (mAccumulator < 0)
-						{
-							mInstructionCounter = mOperand;
-						}
-			            break;
-		case BRANCHZERO: if (mAccumulator == 0)
-						 {
-							 mInstructionCounter = mOperand;
-						 }
-			             break;
-		case HALT: // done
-			       exit (0);
-			       break;
-		default: cout << "ERROR: Invalid instruction. Exiting program!" << endl;
-				 exit (1);
-			     break;
+	case READ: cout << ">> ";
+		cin >> mDataMemoryPtr[mOperand];
+		break;
+	case WRITE: cout << "<< " << mDataMemoryPtr[mOperand] << endl;
+		break;
+	case LOAD: mAccumulator = mDataMemoryPtr[mOperand];
+		break;
+	case STORE: mDataMemoryPtr[mOperand] = mAccumulator;
+		break;
+	case ADD: mAccumulator += mDataMemoryPtr[mOperand];
+		break;
+	case SUBTRACT: mAccumulator -= mDataMemoryPtr[mOperand];
+		break;
+	case DIVIDE: mAccumulator /= mDataMemoryPtr[mOperand];
+		break;
+	case MULTIPLY: mAccumulator *= mDataMemoryPtr[mOperand];
+		break;
+	case MOD: mAccumulator %= mDataMemoryPtr[mOperand];
+		break;
+	case EXP: mAccumulator = (int) pow ((double) mDataMemoryPtr[mOperand], (double) mAccumulator);
+		break;
+	case BRANCH: mInstructionCounter = mAccumulator;
+		break;
+	case BRANCHNEG: 
+		if (mAccumulator < 0)
+		{
+			mInstructionCounter = mOperand;
+		}
+		break;
+	case BRANCHPOS: 
+		if (mAccumulator > 0)
+		{
+			mInstructionCounter = mOperand;
+		}
+		break;
+	case BRANCHZERO: 
+		if (mAccumulator == 0)
+		{
+			mInstructionCounter = mOperand;
+		}
+		break;
+	case SHIFTLEFT:
+		mAccumulator = mAccumulator << mDataMemoryPtr[mOperand]; 
+		break;
+	case SHIFTRIGHT:
+		mAccumulator = mAccumulator >> mDataMemoryPtr[mOperand]; 
+		break;
+	case HALT: // done
+		exit (0);
+		break;
+	default: cout << "ERROR: Invalid instruction. Exiting program!" << endl;
+		system("pause");
+		ofstream logFile;
+		logFile.open("invalidOpcode.log", ios::out);
+		logFile << "Invalid opcode: " << mOpcode << "\n";
+		logFile.close();
+		exit (1);
+		break;
 	}
 
 	system ("pause");
@@ -202,7 +224,7 @@ void Simpletron::dumpMemory ()
 {
 	int index = 0;
 	SmlInstruction *tempPtr = this->getProgramMemoryPtr ();
-	
+
 	system ("cls");
 
 	cout << "REGISTERS:" << endl;
@@ -220,6 +242,7 @@ void Simpletron::dumpMemory ()
 	printf ("%-20s%+20.5d\n", "OperationCode", mOpcode);
 	printf ("%-20s%+20.5d\n", "Operand", mOperand);
 	cout << endl;
+
 
 
 	cout << "PROGRAM MEMORY:" << endl;

@@ -36,8 +36,11 @@ void SimApp::loadProgram (ifstream &inStream)
 	while (!inStream.eof ())
 	{
 		std::getline (inStream, instruction);
-		tempPtr[index].setOpcode ((OpcodeType) (atoi (instruction.c_str ()) / mSmlComputer.getDataSize ()));
-		tempPtr[index].setOperand ((atoi (instruction.c_str ()) % mSmlComputer.getDataSize ()));
+		char opcode[4] = {0};
+		strncpy(opcode, instruction.c_str(), 3);
+
+		tempPtr[index].setOpcode ((OpcodeType) (atoi(opcode) ));
+		tempPtr[index].setOperand ((atoi (&instruction.c_str()[3]) % mSmlComputer.getDataSize ()));
 		index++;
 	}
 
@@ -63,6 +66,13 @@ void SimApp::runApp ()
 	openFile (fileName, inStream);
 
 	loadProgram (inStream);
+
+	if(mSmlComputer.getProgramSize() == 0)
+	{
+		printf("File is empty. Exiting...\n");
+		system("pause");
+		exit(0);
+	}
 
 	displayProgram ();
 
