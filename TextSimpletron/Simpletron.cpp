@@ -197,6 +197,12 @@ void Simpletron::execute ()
 			mInstructionCounter = mOperand;
 		}
 		break;
+	case SHIFTLEFT:
+		mAccumulator = mAccumulator << mDataMemoryPtr[mOperand]; 
+		break;
+	case SHIFTRIGHT:
+		mAccumulator = mAccumulator >> mDataMemoryPtr[mOperand]; 
+		break;
 	case HALT: // done
 		exit (0);
 		break;

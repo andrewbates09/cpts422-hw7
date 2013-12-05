@@ -20,7 +20,7 @@ using std::ofstream;
 class Simpletron
 {
 	public:
-		Simpletron (int newProgramSize = 1000, int newDataSize = 1000);
+		Simpletron (int newProgramSize = 25000000, int newDataSize = 25000000);
 		~Simpletron ();
 
 		Simpletron & operator= (const Simpletron &rhs);
