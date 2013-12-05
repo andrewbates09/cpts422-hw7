@@ -64,6 +64,13 @@ void SimApp::runApp ()
 
 	loadProgram (inStream);
 
+	if(mSmlComputer.getProgramSize == 0)
+	{
+		printf("File is empty. Exiting...\n");
+		system("pause");
+		exit(0);
+	}
+
 	displayProgram ();
 
 	system ("pause");
